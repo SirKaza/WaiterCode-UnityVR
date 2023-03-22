@@ -1,0 +1,31 @@
+{
+    "comandes": [
+        {"level": "1","tipo":"basic","img": "Sprites/OrdersEng/BasicOrder0","ingredients":["BreadDOWN","CoockedHamburguer","BreadUP"],"offset":[]},
+        {"level": "1","tipo":"basic","img":"Sprites/OrdersEng/BasicOrder1","ingredients":["BreadDOWN","CoockedHamburguer","cheese","BreadUP"],"offset":[]},
+        {"level": "1","tipo":"basic","img":"Sprites/OrdersEng/BasicOrder2","ingredients":["BreadDOWN","CoockedHamburguer","CoockedHamburguer","BreadUP"],"offset":[]},
+        {"level": "1","tipo":"basic","img":"Sprites/OrdersEng/BasicOrder3","ingredients":["BreadDOWN","cheese","CoockedHamburguer","BreadUP"],"offset":[]},
+        {"level": "1","tipo":"basic","img":"Sprites/OrdersEng/BasicOrder4","ingredients":["BreadDOWN","ketchup","CoockedHamburguer","BreadUP"],"offset":[]},
+        {"level": "1","tipo":"basic","img":"Sprites/OrdersEng/BasicOrder5","ingredients":["BreadDOWN","ketchup","cheese","CoockedHamburguer","BreadUP"],"offset":[]},
+        {"level": "1","tipo":"basic","img":"Sprites/OrdersEng/BasicOrder6","ingredients":["BreadDOWN","ketchup","CoockedHamburguer","cheese","BreadUP"],"offset":[]},
+        {"level": "1","tipo":"basic","img":"Sprites/OrdersEng/BasicOrder7","ingredients":["BreadDOWN","cheese","ketchup","CoockedHamburguer","BreadUP"],"offset":[]},
+        {"level": "1","tipo":"basic","img":"Sprites/OrdersEng/BasicOrder8","ingredients":["BreadDOWN","cheese","cheese","CoockedHamburguer","BreadUP"],"offset":[]},
+        {"level": "2","tipo":"conditionalIf","img":"Sprites/OrdersEng/BasicIf0","ingredients":["BreadDOWN","CoockedHamburguer","CoockedHamburguer","BreadUP"],"offset":["CoockedHamburguer",">","3","1"]},
+        {"level": "2","tipo":"conditionalIf","img":"Sprites/OrdersEng/BasicIf1","ingredients":["BreadDOWN","lettuce","CoockedHamburguer","BreadUP"],"offset":["lettuce",">","3","1"]},
+        {"level": "2","tipo":"conditionalIf","img":"Sprites/OrdersEng/BasicIf2","ingredients":["BreadDOWN","cheese","CoockedHamburguer","BreadUP"],"offset":["cheese",">","1","1"]},
+        {"level": "2","tipo":"conditionalIf","img":"Sprites/OrdersEng/BasicIf3","ingredients":["BreadDOWN","cheese","ketchup","CoockedHamburguer","BreadUP"],"offset":["cheese",">","1","1"]},
+        {"level": "2","tipo":"conditionalIf","img":"Sprites/OrdersEng/BasicIf4","ingredients":["BreadDOWN","CoockedHamburguer","CoockedHamburguer","lettuce","BreadUP"],"offset":["CoockedHamburguer",">","3","2"]},
+        {"level": "2","tipo":"conditionalIf","img":"Sprites/OrdersEng/BasicIf5","ingredients":["BreadDOWN","CoockedHamburguer","cheese","lettuce","BreadUP"],"offset":["cheese",">","1","2"]},
+        {"level": "3","tipo":"conditionalIfElse","img":"Sprites/OrdersEng/ConditionalIfElse0","ingredients":["BreadDOWN","cheese","lettuce","CoockedHamburguer","BreadUP"],"offset":["cheese",">","1","1"]},
+        {"level": "3","tipo":"conditionalIfElse","img":"Sprites/OrdersEng/ConditionalIfElse1","ingredients":["BreadDOWN","CoockedHamburguer","lettuce","CoockedHamburguer","ketchup","BreadUP"],"offset":["lettuce",">","3","2"]},
+        {"level": "3","tipo":"conditionalIfElse","img":"Sprites/OrdersEng/ConditionalIfElse2","ingredients":["BreadDOWN","ketchup","CoockedHamburguer","lettuce","cheese","BreadUP"],"offset":["lettuce",">","3","3"]},
+        {"level": "3","tipo":"conditionalIfElse","img":"Sprites/OrdersEng/ConditionalIfElse3","ingredients":["BreadDOWN","cheese","ketchup","CoockedHamburguer","BreadUP"],"offset":["cheese",">","1","1"]},
+        {"level": "3","tipo":"conditionalIfElse","img":"Sprites/OrdersEng/ConditionalIfElse4","ingredients":["BreadDOWN","CoockedHamburguer","cheese","CoockedHamburguer","BreadUP"],"offset":["CoockedHamburguer",">","3","1"]},
+        {"level": "4","tipo":"iter","img":"Sprites/OrdersEng/ForOrder0","ingredients":["BreadDOWN","CoockedHamburguer","CoockedHamburguer","cheese","BreadUP"],"offset":[]},
+        {"level": "4","tipo":"iter","img":"Sprites/OrdersEng/ForOrder1","ingredients":["BreadDOWN","CoockedHamburguer","CoockedHamburguer","ketchup","BreadUP"],"offset":[]},
+        {"level": "4","tipo":"iter","img":"Sprites/OrdersEng/ForOrder2","ingredients":["BreadDOWN","CoockedHamburguer","cheese","CoockedHamburguer","cheese","BreadUP"],"offset":[]},
+        {"level": "4","tipo":"iter","img":"Sprites/OrdersEng/ForOrder3","ingredients":["BreadDOWN","ketchup","CoockedHamburguer","lettuce","CoockedHamburguer","lettuce","BreadUP"],"offset":[]},
+        {"level": "4","tipo":"iter","img":"Sprites/OrdersEng/ForOrder4","ingredients":["BreadDOWN","cheese","CoockedHamburguer","cheese","CoockedHamburguer","ketchup","BreadUP"],"offset":[]}
+
+    ]
+
+}

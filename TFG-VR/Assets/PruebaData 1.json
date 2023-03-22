@@ -1,0 +1,124 @@
+{
+  "orders": [
+    {
+      "level": "1",
+      "type": "basic",
+      "img": "",
+      "sentence": "I want a hamburguer only with meat please. Thanks!",
+      "instructions": [ "DownBreadPanel", "MeatPanel", "TopBreadPanel" ]
+    },
+    {
+      "level": "1",
+      "type": "basic",
+      "img": "",
+      "sentence": "I want a hamburguer with meat and cheese please. Thanks!",
+      "instructions": [ "DownBreadPanel", "MeatPanel", "CheesePanel", "TopBreadPanel" ]
+    },
+    {
+      "level": "1",
+      "type": "basic",
+      "img": "",
+      "sentence": "I want a hamburguer with double of cheese and meat please. Thanks!",
+      "instructions": [ "DownBreadPanel", "CheesePanel", "CheesePanel", "MeatPanel", "TopBreadPanel" ]
+    },
+
+    {
+      "level": "2",
+      "type": "basic",
+      "img": "",
+      "sentence": "I want a hamburguer with meat, lettuce and ketchup please. Thanks!",
+      "instructions": [ "DownBreadPanel", "MeatPanel", "LettucePanel", "KetchupPanel", "TopBreadPanel" ]
+    },
+    {
+      "level": "2",
+      "type": "basic",
+      "img": "",
+      "sentence": "I want a hamburguer with meat, cheese and lettuce please. Thanks!",
+      "instructions": [ "DownBreadPanel", "MeatPanel", "CheesePanel", "LettucePanel", "TopBreadPanel" ]
+    },
+    {
+      "level": "2",
+      "type": "basic",
+      "img": "",
+      "sentence": "I want a hamburguer with double of lettuce and meat please. Thanks!",
+      "instructions": [ "DownBreadPanel", "LettucePanel", "LettucePanel", "MeatPanel", "TopBreadPanel" ]
+    },
+    {
+      "level": "3",
+      "type": "conditionalIf",
+      "img": "",
+      "sentence": "I want a hamburguer with meat, cheese and if you have more than one slice of cheese, add another slice please. Thanks!",
+      "instructions": [ "DownBreadPanel", "MeatPanel", "CheesePanel", "IfCheesePlusOnePanel", "CheesePanel", "ClosingPanel", "TopBreadPanel" ]
+    },
+    {
+      "level": "3",
+      "type": "conditionalIf",
+      "img": "",
+      "sentence": "I want a hamburguer with meat, lettuce and if you have more than three pieces of meat, add another piece please. Thanks!",
+      "instructions": [ "DownBreadPanel", "MeatPanel", "LettucePanel", "IfMeatPlusThreePanel", "MeatPanel", "ClosingPanel", "TopBreadPanel" ]
+    },
+    {
+      "level": "3",
+      "type": "conditionalIf",
+      "img": "",
+      "sentence": " I want a hamburguer with ketchup, meat and if you have more than three lettuce leaves, add another leave please. Thanks!",
+      "instructions": [ "DownBreadPanel", "KetchupPanel", "MeatPanel", "IfLettucePlusThreePanel", "LettucePanel", "ClosingPanel", "TopBreadPanel" ]
+    },
+    {
+      "level": "4",
+      "type": "conditionalIfElse",
+      "img": "",
+      "sentence": "I want a hamburguer with meat, and if you have more than one slice of cheese, add me one slice, but if you don't, add me one lettuce leave please. Thanks!",
+      "instructions": [ "DownBreadPanel", "MeatPanel", "IfElseCheesePlusOnePanel", "CheesePanel", "ElsePanel", "LettucePanel", "ClosingPanel", "TopBreadPanel" ]
+    },
+    {
+      "level": "4",
+      "type": "conditionalIfElse",
+      "img": "",
+      "sentence": "I want a hamburguer with meat, and if you have more than three leaves of lettuce, add me one , but of you don't, add me another piece of meat please.Thanks!",
+      "instructions": [ "DownBreadPanel", "MeatPanel", "IfElseLettucePlusThreePanel", "LettucePanel", "ElsePanel", "MeatPanel", "ClosingPanel", "TopBreadPanel" ]
+    },
+    {
+      "level": "4",
+      "type": "conditionalIfElse",
+      "img": "",
+      "sentence": "I want a hamburguer with ketchup, and if you have more than three pieces of meat, add me one, but if you don't, add me one slice of cheese please. Thanks!",
+      "instructions": [ "DownBreadPanel", "KetchupPanel", "IfElseMeatPlusThreePanel", "MeatPanel", "ElsePanel", "CheesePanel", "ClosingPanel", "TopBreadPanel" ]
+    },
+    {
+      "level": "5",
+      "type": "iter",
+      "img": "",
+      "sentence": "I want a hamburguer with meat twice in a row please. Gracias!",
+      "instructions": [ "DownBreadPanel", "ForTwoPanel", "MeatPanel", "ClosingPanel", "CheesePanel", "TopBreadPanel" ]
+    },
+    {
+      "level": "5",
+      "type": "iter",
+      "img": "",
+      "sentence": "I want a hamburguer with meat twice in a row. After that, add the ketchup please. Thanks!",
+      "instructions": [ "DownBreadPanel", "ForTwoPanel", "MeatPanel", "ClosingPanel", "KetchupPanel", "TopBreadPanel" ]
+    },
+    {
+      "level": "5",
+      "type": "iter",
+      "img": "",
+      "sentence": "I want a hamburguer with meat twice in a row and cheese please. Thanks!",
+      "instructions": [ "DownBreadPanel", "ForTwoPanel", "MeatPanel", "CheesePanel", "ClosingPanel", "TopBreadPanel" ]
+    },
+    {
+      "level": "5",
+      "type": "iter",
+      "img": "",
+      "sentence": "I want a hamburguer with ketchup, meat and lettuce twice in a row please. Thanks!",
+      "instructions": [ "DownBreadPanel", "KetchupPanel", "ForTwoPanel", "MeatPanel", "LettucePanel", "ClosingPanel", "TopBreadPanel" ]
+    },
+    {
+      "level": "5",
+      "type": "iter",
+      "img": "",
+      "sentence": "I want a hamburguer with cheese, meat twice in a row and the ketchup above. Thanks!",
+      "instructions": [ "DownBreadPanel", "CheesePanel", "ForTwoPanel", "MeatPanel", "ClosingPanel", "KetchupPanel", "TopBreadPanel" ]
+    }
+  ]
+}
