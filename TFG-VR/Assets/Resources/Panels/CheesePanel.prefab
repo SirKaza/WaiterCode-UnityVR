@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 8822858805134681837}
   - component: {fileID: -7438008995067779562}
   - component: {fileID: -4656227295575932380}
+  - component: {fileID: -8704694484425815407}
   m_Layer: 0
   m_Name: CheesePanel
   m_TagString: panel
@@ -221,5 +222,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 98b6407bd8eb4b44ebcb7559b6216e4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-8704694484425815407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8822858805134681839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a18d264ed430abd4f955096ad5e5d912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

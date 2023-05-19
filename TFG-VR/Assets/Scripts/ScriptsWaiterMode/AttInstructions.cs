@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -12,36 +12,46 @@ public class AttInstructions : MonoBehaviour
     private float conditionalSeparationAxisY = 0.18f;
 
     private float lateralPanelScale = 1.4f;
+    private bool isDrink = false;
 
     // Start is called before the first frame update
     void Start()
     {
-
         currentHamburguer = new OrderWaiter();
-
-        //pruebas
     }
 
 
     private void OnTriggerStay(Collider other)
     {
-
         //Detectamos los paneles que hemos soltado y aún no hemos colocado
         //if (other.tag == "panel" && !other.gameObject.transform.GetComponent<OVRGrabbable>().isGrabbed)
         //{
 
         if (other.tag == "panel" && !other.GetComponent<OVRGrabbable>().isGrabbed && !other.GetComponent<panelScript>().getIsInPanel())
         {
-            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Audio/panelSound"), other.transform.position, 1.0f);
+            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Audio/panelSound"), other.transform.position, 0.7f);
+            other.gameObject.tag = "Untagged"; //Quitamos el tag para quitarlo y poder instanciar correctamente cuando cae al suelo otro panel igual
             //Queremos la posicion encima del panel y debajo de la ultima instruccion que se ha añadido.
             //Si no hemos puesto ninguna instrucción, simplemente lo posicionamos arriba de todo del panel
 
+            // Si es bebida activamos flag
+            if (other.name == "Cola" || other.name == "Beer" || other.name == "Water"){
+                isDrink = true;
+            }
+            else{
+                isDrink = false;
+            }
+
             if (currentHamburguer.getInstructions().Count == 0)
-            {
-
-                other.gameObject.transform.position = new Vector3(this.transform.position.x + other.transform.localScale.y, this.transform.position.y + 0.9f, this.transform.position.z);
-                other.gameObject.transform.rotation = Quaternion.Euler(180, 180, 90);
-
+            {   
+                if (isDrink) {
+                    other.gameObject.transform.position = new Vector3(this.transform.position.x + 0.1f, this.transform.position.y + 0.9f, this.transform.position.z);
+                    other.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+                }else{
+                    other.gameObject.transform.position = new Vector3(this.transform.position.x + other.transform.localScale.y, this.transform.position.y + 0.9f, this.transform.position.z);
+                    other.gameObject.transform.rotation = Quaternion.Euler(180, 180, 90);
+                }
+                
                 currentHamburguer.addInstruction(other.gameObject);
 
                 //New
@@ -49,7 +59,6 @@ public class AttInstructions : MonoBehaviour
                 {
                     //Añadimos como instruccion el closing
                     currentHamburguer.addInstruction(other.gameObject.transform.GetChild(2).gameObject);
-
                 }
 
                 other.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
@@ -60,24 +69,25 @@ public class AttInstructions : MonoBehaviour
                     //Añadimos como instruccion el else y el closing
                     currentHamburguer.addInstruction(other.gameObject.transform.GetChild(2).gameObject);
                     currentHamburguer.addInstruction(other.gameObject.transform.GetChild(4).gameObject);
-
                 }
                 if (!other.gameObject.GetComponent<panelScript>().getItWasInPanel())
                 {
-
                     GameControllerWaiter.current.createPanel(other.name);
                 }
-
                 //Si el freeze no está dentro se caen los paneles
             }
 
             //Si el panel que estoy poniendo no lo coloco entre ninguna de los paneles ya existentes, se coloca justo debajo.
             else if (other.gameObject.transform.position.y < currentHamburguer.getLastInstruction().transform.position.y)
             {
+                if (isDrink) {
+                    other.gameObject.transform.position = new Vector3(this.transform.position.x + 0.1f, currentHamburguer.getLastInstruction().transform.position.y - conditionalSeparationAxisY, this.transform.position.z);
+                    other.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
 
-                other.gameObject.transform.position = new Vector3(this.transform.position.x + other.transform.localScale.y, currentHamburguer.getLastInstruction().transform.position.y - conditionalSeparationAxisY, this.transform.position.z);
-
-                other.gameObject.transform.rotation = Quaternion.Euler(180, 180, 90);
+                }else{
+                    other.gameObject.transform.position = new Vector3(this.transform.position.x + other.transform.localScale.y, currentHamburguer.getLastInstruction().transform.position.y - conditionalSeparationAxisY, this.transform.position.z);
+                    other.gameObject.transform.rotation = Quaternion.Euler(180, 180, 90);
+                }
                 currentHamburguer.addInstruction(other.gameObject);
 
                 //Congelamos la posición del panel. Si el freeze no está dentro del if/else se caen los paneles. 
@@ -113,15 +123,12 @@ public class AttInstructions : MonoBehaviour
                 }
 
                 UndoManager.current.addCurrentObject(other.gameObject);
-
-
             }
 
 
             //En cualquier otro caso la instrucción estará entre otras dos ya existentes. 
             else
             {
-
                 int i = 0;
 
                 //Recorremos los ingredientes hasta que encontremos entre que dos paneles hemos puesto el nuevo panel
@@ -167,11 +174,8 @@ public class AttInstructions : MonoBehaviour
                             other.gameObject.transform.position = new Vector3(this.transform.position.x + other.transform.localScale.y, ((GameObject)currentHamburguer.getInstructions()[i]).transform.position.y - other.transform.localScale.x, this.transform.position.z + conditionalSeparationAxisZ);
                             other.gameObject.GetComponent<panelScript>().setIsInElse(true);
                             other.gameObject.GetComponent<panelScript>().setIsInIfElse(true);
-
                             other.gameObject.GetComponent<panelScript>().setIsInside(IfElsePanel);
-
                             IfElsePanel.GetComponent<panelScript>().setPanelsInsideElse(IfElsePanel.GetComponent<panelScript>().getPanelsInsideElse() + 1);
-
                         }
 
 
@@ -197,22 +201,18 @@ public class AttInstructions : MonoBehaviour
                             other.gameObject.transform.position = new Vector3(this.transform.position.x + other.transform.localScale.y, ((GameObject)currentHamburguer.getInstructions()[i]).transform.position.y - other.transform.localScale.x, this.transform.position.z + conditionalSeparationAxisZ);
                             other.gameObject.GetComponent<panelScript>().setIsInIf(true);
                             other.gameObject.GetComponent<panelScript>().setIsInIfElse(true);
-
                             IfElsePanel.GetComponent<panelScript>().setPanelsInsideIf(IfElsePanel.GetComponent<panelScript>().getPanelsInsideIf() + 1);
-
                             other.gameObject.GetComponent<panelScript>().setIsInside(IfElsePanel);
                         }
 
                         else if (((GameObject)currentHamburguer.getInstructions()[i]).GetComponent<panelScript>().getIsFor())
                         {
-
                             other.gameObject.GetComponent<panelScript>().setIsInPanel(true);
                             other.gameObject.transform.position = new Vector3(this.transform.position.x + other.transform.localScale.y, ((GameObject)currentHamburguer.getInstructions()[i]).transform.position.y - conditionalSeparationAxisY, this.transform.position.z + conditionalSeparationAxisZ);
                             other.gameObject.GetComponent<panelScript>().setIsInFor(true);
                             other.gameObject.GetComponent<panelScript>().setIsInside((GameObject)currentHamburguer.getInstructions()[i]);
                             ((GameObject)currentHamburguer.getInstructions()[i]).GetComponent<panelScript>().setPanelsInside(((GameObject)currentHamburguer.getInstructions()[i]).GetComponent<panelScript>().getPanelsInside() + 1);
                             //Congelamos la posición del panel. Si el freeze no está dentro del if/else se caen los paneles. 
-
 
                         }
                         else if (((GameObject)currentHamburguer.getInstructions()[i]).GetComponent<panelScript>().getIsInFor())
@@ -223,11 +223,8 @@ public class AttInstructions : MonoBehaviour
                             other.gameObject.GetComponent<panelScript>().setIsInPanel(true);
                             other.gameObject.transform.position = new Vector3(this.transform.position.x + other.transform.localScale.y, ((GameObject)currentHamburguer.getInstructions()[i]).transform.position.y - other.transform.localScale.x, this.transform.position.z + conditionalSeparationAxisZ);
                             other.gameObject.GetComponent<panelScript>().setIsInFor(true);
-
                             forTwoPanel.GetComponent<panelScript>().setPanelsInside(forTwoPanel.GetComponent<panelScript>().getPanelsInside() + 1);
-
                             other.gameObject.GetComponent<panelScript>().setIsInside(forTwoPanel);
-
                         }
 
                         else if (((GameObject)currentHamburguer.getInstructions()[i]).GetComponent<panelScript>().getIsIf())
@@ -249,23 +246,18 @@ public class AttInstructions : MonoBehaviour
                             other.gameObject.GetComponent<panelScript>().setIsInPanel(true);
                             other.gameObject.transform.position = new Vector3(this.transform.position.x + other.transform.localScale.y, ((GameObject)currentHamburguer.getInstructions()[i]).transform.position.y - other.transform.localScale.x, this.transform.position.z + conditionalSeparationAxisZ);
                             other.gameObject.GetComponent<panelScript>().setIsInIf(true);
-
                             IfPanel.GetComponent<panelScript>().setPanelsInside(IfPanel.GetComponent<panelScript>().getPanelsInside() + 1);
-
                             other.gameObject.GetComponent<panelScript>().setIsInside(IfPanel);
-
                         }
 
                         //Aquí no entra cuando sacamos una instrucción de un panel especial y lo ponemos debajo del closing
                         else
                         {
-
                             //Colocamos entre dos paneles básicos
                             other.gameObject.GetComponent<panelScript>().setIsInPanel(true);
 
                             //Colocamos la nueva instruccion entre los dos paneles
                             other.gameObject.transform.position = new Vector3(this.transform.position.x + other.transform.localScale.y, ((GameObject)currentHamburguer.getInstructions()[i]).transform.position.y - other.transform.localScale.x, this.transform.position.z);
-
                         }
 
                         //Insertamos la instrucción a la lista justo delante de la que estamos obeservando en ese momento                       
@@ -277,7 +269,6 @@ public class AttInstructions : MonoBehaviour
                         if (other.GetComponent<panelScript>().getIsFor() || other.GetComponent<panelScript>().getIsIf())
                         {
                             currentHamburguer.insertInstruction(i + 2, other.gameObject.transform.GetChild(2).gameObject);
-
                         }
 
                         //Si no ha estado en el panel creamos otro panel encima de la mesa cuando lo pongamos
@@ -285,23 +276,16 @@ public class AttInstructions : MonoBehaviour
                         {
                             GameControllerWaiter.current.createPanel(other.name);
                         }
-
                         //Cuando acabmos de colocar el panel entre otros dos paneles, recolocamos los paneles. Cambiar el método y sacar el for del metodo
                         reOrderFunction(other);
-
                     }
                     else
                     {
                         i++;
                     }
                 }
-
             }
-
-
-
         }
-
     }
 
     // Update is called once per frame
@@ -354,7 +338,6 @@ public class AttInstructions : MonoBehaviour
                 {
 
                     ((GameObject)currentHamburguer.getInstructions()[x]).transform.position = new Vector3(this.transform.position.x + other.transform.localScale.y, ((GameObject)currentHamburguer.getInstructions()[x - 1]).transform.position.y - conditionalSeparationAxisY, this.transform.position.z + conditionalSeparationAxisZ);
-
                 }
 
 
@@ -365,10 +348,7 @@ public class AttInstructions : MonoBehaviour
                     ((GameObject)currentHamburguer.getInstructions()[x]).transform.position = new Vector3(this.transform.position.x + other.transform.localScale.y, ((GameObject)currentHamburguer.getInstructions()[x - 1]).transform.position.y - conditionalSeparationAxisY, this.transform.position.z);
 
                 }
-
             }
-
-
         }
     }
 
@@ -552,9 +532,6 @@ public class AttInstructions : MonoBehaviour
             ((GameObject)currentHamburguer.getInstructions()[x]).transform.GetChild(2).position = new Vector3(xPosition2, yNewPosition2, zPosition2);
 
             ((GameObject)currentHamburguer.getInstructions()[x]).GetComponent<panelScript>().setReescaleSize(((GameObject)currentHamburguer.getInstructions()[x]).GetComponent<panelScript>().getReescaleSize() - panelsLeft);
-
-
-
         }
         else if (((GameObject)currentHamburguer.getInstructions()[x]).GetComponent<panelScript>().getPanelsInside() > ((GameObject)currentHamburguer.getInstructions()[x]).GetComponent<panelScript>().getReescaleSize() && (other.GetComponent<panelScript>().getIsInFor() || other.GetComponent<panelScript>().getIsInIf()))
         {
@@ -581,8 +558,6 @@ public class AttInstructions : MonoBehaviour
 
                 ((GameObject)currentHamburguer.getInstructions()[x]).GetComponent<panelScript>().setReescaleSize(((GameObject)currentHamburguer.getInstructions()[x]).GetComponent<panelScript>().getReescaleSize() + 1);
             }
-
-
         }
     }
 

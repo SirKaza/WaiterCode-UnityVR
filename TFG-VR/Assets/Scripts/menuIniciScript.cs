@@ -166,9 +166,9 @@ public class menuIniciScript : MonoBehaviour
         UserJSON current_user = new UserJSON();
         current_user.name = "AutoName";
         current_user.password = "123";
-        current_user.currentDay = 2;
+        current_user.currentDay = 1;
         current_user.tutorialChefCompleted = false;
-        current_user.tutorialWaiterCompleted = false;
+        current_user.tutorialWaiterCompleted = true;
         current_user.volume = "1.0";
         current_user.dataCollection = "Start data collection";
 

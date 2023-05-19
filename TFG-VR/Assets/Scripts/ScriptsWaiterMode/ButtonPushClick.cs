@@ -10,9 +10,9 @@ public class ButtonPushClick : MonoBehaviour
     private float minLocalY;
     private float maxLocalY;
 
-    private bool isWaiting = false;
-    private bool isBeingTouched = false;
     private bool isClicked = false;
+    public bool isButtonPressed = false;
+    private bool isWaiting = false;
 
     private GameObject panel;
 
@@ -24,8 +24,7 @@ public class ButtonPushClick : MonoBehaviour
 
     void Start()
     {
-
-        minLocalY = transform.localPosition.y - 0.04f;
+        minLocalY = transform.localPosition.y - 0.03f;
         maxLocalY = transform.localPosition.y;
 
         //Start with button minLocalY
@@ -37,62 +36,62 @@ public class ButtonPushClick : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if (!isClicked)
+        //Se supone que aquí bloqueamos la altura máxima del botón
+        if(transform.localPosition.y >= maxLocalY)
         {
-            //Se supone que aquí bloqueamos la altura máxima del botón
-            if(transform.localPosition.y >= maxLocalY)
-            {
-                //Volvemos a la posición 
-                transform.localPosition = buttonUpPosition;
-            }
+            //Volvemos a la posición 
+            transform.localPosition = buttonUpPosition;
+        }
 
-            //Cuando lleguemos a la posición por debajo de MinLocalY, entregaremos el pedido y bloqueamos el botón en esa posición
-            if(transform.localPosition.y <= minLocalY)
-            {
-                isClicked = true;
-                transform.localPosition = buttonDownPosition;
-                OnButtonDown();
-            }
+        //Cuando lleguemos a la posición por debajo, entregaremos el pedido y bloqueamos el botón en esa posición
+        if(transform.localPosition.y <= minLocalY)
+        {
+            transform.localPosition = buttonDownPosition;
+            OnButtonDown();
         }
     }
         
     public void OnButtonDown()
     {
-        panel = GameObject.Find("BasicPanel");
+        if (!isButtonPressed && GameControllerWaiter.current.delivering == false)
+        {
+            isButtonPressed = true;
 
-        //Enviamos el pedido para ver si está bien
+            panel = GameObject.Find("BasicPanel");
+            
+            //Devolvemos el botón a su lugar inicial 2 segundos más tarde de haberlo pulsado
+            StartCoroutine("Waiting");
 
-
-
-        OrderWaiter sendOrder = panel.GetComponent<AttInstructions>().GetHamburguer();
-        GameControllerWaiter.current.arriveOrder(sendOrder);
-
-        
-        //Devolvemos el botón a su lugar inicial 2 segundos más tarde de haberlo pulsado
-        StartCoroutine("Waiting");
-        StartCoroutine("ButtonUp");
-        
+            //Enviamos el pedido para ver si está bien
+            OrderWaiter sendOrder = panel.GetComponent<AttInstructions>().GetHamburguer();
+            GameControllerWaiter.current.arriveOrder(sendOrder);
+        }
     }
-
     IEnumerator Waiting()
     {
         isWaiting = true;
-        yield return new WaitForSeconds(3);
+        StartCoroutine("ButtonUp");
+        yield return new WaitForSeconds(2);
         isWaiting = false;
 
     }
     IEnumerator ButtonUp()
     {
+        float maxWaitTime = 5.0f; // tiempo máximo de espera en segundos
+        float elapsedTime = 0.0f;
+
         while (isWaiting)
         {
+            if (elapsedTime >= maxWaitTime)
+            {
+                Debug.LogWarning("ButtonUp() coroutine timed out waiting for isWaiting to become false");
+                break; // salir del bucle si ha pasado demasiado tiempo
+            }
             yield return new WaitForSeconds(0.1f);
+            elapsedTime += 0.1f;
         }
-
-        GetComponent<MeshRenderer>().material = blueMat;
         transform.localPosition = new Vector3(transform.localPosition.x, maxLocalY, transform.localPosition.z);
-        isClicked = false;
+        isButtonPressed = false;
+        GetComponent<MeshRenderer>().material = blueMat;
     }
-
-
 }

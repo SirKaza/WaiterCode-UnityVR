@@ -21,12 +21,14 @@ public class MenusControllerWaiter : MonoBehaviour
 
     private GameObject tutorialText;
     private GameObject buttonText;
+    private GameObject deliverText;
 
     private bool isShowingComanda = false;
 
     private GameObject imageBig;
     private GameObject imageSmall;
     private Sprite myImg;
+
     private void Start()
     {
         savedText = GameObject.Find("SavingGameText");
@@ -43,9 +45,9 @@ public class MenusControllerWaiter : MonoBehaviour
         imageSmall = GameObject.Find("ImageBelowSmall"); ;
         imageSmall.SetActive(false);
 
-        tutorialText = GameObject.Find("CanvasTextStart");
-        buttonText = GameObject.Find("ButtonText");
-        buttonText.SetActive(false);
+        // tutorialText = GameObject.Find("CanvasTextStart");
+        // buttonText = GameObject.Find("ButtonText");
+        // deliverText = GameObject.Find("DeliverText");
     }
 
 
@@ -60,15 +62,20 @@ public class MenusControllerWaiter : MonoBehaviour
         GameObject.Find("SliderWaiter").GetComponent<Slider>().value = GameControllerWaiter.current.current_user().getVolume();
     }
 
-    public void activeTutorialText(bool active)
-    {
-        tutorialText.SetActive(active);
-    }
+    // public void activeTutorialText(bool active)
+    // {
+    //     tutorialText.SetActive(active);
+    // }
 
-    public void activeButtonText(bool active)
-    {
-        buttonText.SetActive(active);
-    }
+    // public void activeButtonText(bool active)
+    // {
+    //     buttonText.SetActive(active);
+    // }
+
+    // public void activeDeliverText(bool active)
+    // {
+    //     deliverText.SetActive(active);
+    // }
 
     public void showRanking()
     {
@@ -245,6 +252,8 @@ public class MenusControllerWaiter : MonoBehaviour
     }
     public void mostrarFeedback(string feedback)
     {
+        imageBig.SetActive(false);
+        imageSmall.SetActive(false);
         textScreenWaiter.GetComponent<TextMeshProUGUI>().SetText(feedback);
         isShowingComanda = false;
     }
@@ -258,7 +267,7 @@ public class MenusControllerWaiter : MonoBehaviour
         else
         {
             imageBig.SetActive(booleano);
-            myImg = Resources.Load<Sprite>("Panels/images/" +textImage);
+            myImg = Resources.Load<Sprite>(textImage);
             imageBig.GetComponent<Image>().sprite = myImg;
         }
 
@@ -272,7 +281,7 @@ public class MenusControllerWaiter : MonoBehaviour
         else
         {
             imageSmall.SetActive(booleano);
-            myImg = Resources.Load<Sprite>("Panels/images/" + textImage);
+            myImg = Resources.Load<Sprite>(textImage);
             imageSmall.GetComponent<Image>().sprite = myImg;
         }
 
