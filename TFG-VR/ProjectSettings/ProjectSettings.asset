@@ -12,7 +12,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: TFGAlex
+  companyName: TFGMarc
   productName: ProvaTFG
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -753,7 +753,7 @@ PlayerSettings:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled:
-    Collab: 1
+    Collab: 0
     UNet: 1
   luminIcon:
     m_Name: 
@@ -767,10 +767,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 8e2b42d3-d3d4-4c6b-967d-35ed546f75dc
+  cloudProjectId: cf5c1f3e-588d-46be-a90c-8e1974e50df0
   framebufferDepthMemorylessMode: 0
   projectName: ProvaTFG
-  organizationId: alexfuentesraventos
+  organizationId: unity_13cvs6a
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

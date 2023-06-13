@@ -99,7 +99,6 @@ public class menuIniciScript : MonoBehaviour
     public void removePressed(){
         if (currentField){
             currentField.GetComponent<TMPro.TMP_InputField>().text = currentField.GetComponent<TMPro.TMP_InputField>().text.Remove(currentField.GetComponent<TMPro.TMP_InputField>().text.Length -1);
-
         }
     }
 
@@ -163,7 +162,8 @@ public class menuIniciScript : MonoBehaviour
 
         //     }
         // }
-        UserJSON current_user = new UserJSON();
+        // NO NEED TO RUN BACKEND, ONLY RASA
+        UserJSON current_user = new UserJSON(); // BETTER FOR TESTING
         current_user.name = "AutoName";
         current_user.password = "123";
         current_user.currentDay = 1;
@@ -239,8 +239,7 @@ public class menuIniciScript : MonoBehaviour
 
         achievements.firstConditionalIfElseOrderWaiter = false;
         achievements.tenConditionalIfElseOrdersWaiter = false;
-        achievements.thirtyConditionalIfElseOrdersWaiter = false
-        ;
+        achievements.thirtyConditionalIfElseOrdersWaiter = false;
         achievements.firstIterativeOrderWaiter = false;
         achievements.tenIterativeOrdersWaiter = false;
         achievements.thirtyIterativeOrdersWaiter = false;

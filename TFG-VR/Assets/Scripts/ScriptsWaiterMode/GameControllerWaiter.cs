@@ -7,17 +7,29 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Networking;
 using System.Linq;
+using UnityEngine.UI;
+using Newtonsoft.Json;
 
 /// <summary>
 ///  Clase principal del juego. Controla todas las variables y el loop principal del juego. 
 ///  Mediante un patrón singleton, el resto de clases pueden acceder a ella para consultar el estado actual del juego. 
 /// </summary>
+[Serializable] //Rasa
+public class MessageSenderRasa
+{
+    public string sender, message;
+}
+public class MessageRasa //Rasa
+{
+    public string recipient_id, text, image;
+}
 public class GameControllerWaiter : MonoBehaviour
 {
     [SerializeField]
     private OVRPlayerController player;
 
     private float timePerDay = 144f; // Variable para controlar la durabilidad de cada jornada. 
+    // private float timePerDay = 10f; // testing rasa
     private float timeCurrentOrder = 0f; // Variable para medir el tiempo en cocinar la comanda actual. 
     private float actualTimeDay = 144f;  // actualizar valor timePerDay (144f/194f y 96f)
 
@@ -165,6 +177,35 @@ public class GameControllerWaiter : MonoBehaviour
     private GameObject buttonText;
     private GameObject deliverText;
 
+    //RASA part -------------------------
+    // public TxtToSpeech tts1; // se queria hacer un array de tts para cada mesa
+    // public TxtToSpeech tts3;
+    // public TxtToSpeech tts4;
+    // public TxtToSpeech tts5;
+    //private List<TxtToSpeech> tts = new List<TxtToSpeech>();
+
+    private string text;
+    public TextMeshProUGUI displayIncomingText;
+    public TextMeshProUGUI inputField;
+    //public TextMeshProUGUI displayOutgoingText;    
+
+    public static int counter;
+    public string tmp;
+    
+    public string[] names ;
+    public bool trigger;
+    public bool saved;
+    public bool paused;
+    public bool restart;
+    //public bool timeoutTrigger;
+    //public TextToSpeech tts;
+    public TxtToSpeech tts2;
+    public int time = 0; 
+
+    private bool firstTime;
+    private bool rasaFinish;
+    private bool onlyOnce;
+
     private void Awake()
     {
         current = this;
@@ -172,7 +213,33 @@ public class GameControllerWaiter : MonoBehaviour
 
     // Inicializamos todas las clases y los diferentes gameobjects que tengamos. 
     private void Start()
-    {
+    {   
+        // RASA Part
+        tts2= GetComponent<TxtToSpeech>();
+        names = new string[] {"hey","restore","q1 ", "q2 ", "q3 ","q4 "
+        ,"q5 ","q6 ","q7 ",
+        "q8 ","q9 ","q10 ","q11 ","q12 ","q13 ","q14 ","q15 q15 ", "q16 q16 "};
+        counter = 0;
+        tmp = " ";        
+        trigger = false;
+        saved = false;
+        paused = false;
+        restart = false;
+        firstTime = true;
+        rasaFinish = false;
+        onlyOnce = false;
+        //timeoutTrigger = false;
+
+        // tts1 = GetComponent<TxtToSpeech>();
+        // tts3 = GetComponent<TxtToSpeech>();
+        // tts4 = GetComponent<TxtToSpeech>();
+        // tts5 = GetComponent<TxtToSpeech>();
+        // tts.Add(tts1);
+        // tts.Add(tts2);
+        // tts.Add(tts3);
+        // tts.Add(tts4);
+        // tts.Add(tts5);
+
         //Si es nuestro primer día, activamos el texto que nos guiará durante el primer pedido
         arrowPointer = GameObject.Find("Arrow");
         arrowPointer.SetActive(false);
@@ -401,6 +468,30 @@ public class GameControllerWaiter : MonoBehaviour
             gamePaused = false;
         }
 
+        if(isEndOfTheDay && !onlyOnce && !rasaFinish){ // Activamos RASA solo una vez cada dia y cuando no se ha terminado la encuesta
+            onlyOnce = true;
+            pauseGame(); // Pausamos el juego
+            controllerMenus.showChatbot(); // Mostramos el chatbot
+            if (firstTime && !trigger){  //fisrt time bot appears
+                // tts2.Play("Hello! Do you want to answer some questions about the game?");
+                CallPostRequest(names[0]); //automatically send hi to bot to activate it
+                counter += 2;
+                trigger = true;
+                firstTime = false;
+            
+            }else if (!firstTime && !trigger){  // trigger is for when stop/take a break
+                //send the internal command to wake up the bot
+                // tts2.Play("Hello again! Do you want to continue?");
+                CallPostRequest(names[1]);
+                trigger = true;
+            }
+            //when we wake up the bot, we remind him the question left behind
+            if (restart){  // when else if
+                StartCoroutine(coroutineCall(8,tmp));
+                //CallPostRequest(tmp);
+            }
+        }
+
         //ACTIVACIÓN DEL MENÚ DE PAUSA
         if (OVRInput.GetDown(OVRInput.Button.Start))
         {
@@ -423,11 +514,6 @@ public class GameControllerWaiter : MonoBehaviour
             if (!isComandaActive  && !isNearTable) // Si no tenemos ninguna comanda activa y no estamos cerca de ninguna mesa
             {
 
-                if (!isDayStarted)
-                {
-                    isDayStarted = true;
-                }
-
                 //Este if sirve para que no podamos ir clicando la A hasta que se active la mesa que queramos
                 if (!isTableChoosed)
                 {
@@ -443,6 +529,7 @@ public class GameControllerWaiter : MonoBehaviour
 
                     textsClient[randomIndex].SetActive(true);
                     textsClient[randomIndex].GetComponent<TextMeshProUGUI>().SetText("Here!");
+                    // tts2.Play("Here!"); // Reproducir audio de "Here!"
                     textsClient[randomIndex].GetComponent<TextMeshProUGUI>().fontSize = 0.15f;
                     tables[randomIndex].GetComponent<BoxCollider>().enabled = true;
                     isTableChoosed = true;
@@ -453,6 +540,10 @@ public class GameControllerWaiter : MonoBehaviour
         }
         if (isNearTable && !isComandaActive) 
         {
+            if (!isDayStarted)
+            {
+                isDayStarted = true;
+            }
             AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Audio/orderSound"), player.transform.position, 1.0f);
             if (userControl.getCurrentDay() == 1)
             {
@@ -461,6 +552,7 @@ public class GameControllerWaiter : MonoBehaviour
             orderGenerator.generateOrder();
             textsClient[randomIndex].GetComponent<TextMeshProUGUI>().fontSize = 0.08f;
             textsClient[randomIndex].GetComponent<TextMeshProUGUI>().SetText(orderGenerator.getActualOrder().sentence.ToString());
+            // tts2.Play(orderGenerator.getActualOrder().sentence.ToString()); // Reproducir audio de la comanda
             controllerMenus.orderMenuWaiter(orderGenerator.getActualOrder().sentence);
             tables[randomIndex].GetComponent<BoxCollider>().enabled = false;
             isComandaActive = true;
@@ -606,6 +698,8 @@ public class GameControllerWaiter : MonoBehaviour
             totalExp += dayExp;
             this.userControl.setTotalExp((int)totalExp);
             this.timeCurrentOrder = 0f; // Reiniciamos el tiempo de la comanda.
+
+            onlyOnce = false; // Reiniciamos la variable para que se pueda volver a activar RASA al siguiente dia
         }
         return temps; // Retornamos el tiempo actualizado. 
     }
@@ -710,6 +804,8 @@ public class GameControllerWaiter : MonoBehaviour
                 if(deliverTry == false){ // si no se ha intentado entregar
                     deliverTry = true;
                     AudioSource.PlayClipAtPoint(ButtonSoundIncorrect, player.transform.position, 1.0f); // error al entregar
+                    OVRInput.SetControllerVibration(5, 200, OVRInput.Controller.RTouch);
+                    OVRInput.SetControllerVibration(5, 200, OVRInput.Controller.LTouch);
                     controllerMenus.mostrarFeedback("Wrong table! Try again!");
                     DestroyTray(bandeja); // Destruimos la bandeja.
                 }
@@ -730,12 +826,12 @@ public class GameControllerWaiter : MonoBehaviour
         string [] drinks = { "Cola", "Beer", "Water" };
         string [] ingredients = { "LettucePanel", "CheesePanel", "MeatPanel", "KetchupPanel" };
         bool hamburger = false;
-        float cont_hamburger = TrayPosition.y + 0.2f;
+        float cont_hamburger = TrayPosition.y + 0.02f;
 
         int i = 0;
         while (i < instrucciones.Length){
             if(Array.IndexOf(drinks, instrucciones[i]) >= 0){ // existe bebida / -1 if not found
-                GameObject drink = Instantiate(Resources.Load("Menu/"+instrucciones[i]) as GameObject, TrayPosition + new Vector3(0.1f, TrayPosition.y + 0.1f, -0.1f), Quaternion.identity);
+                GameObject drink = Instantiate(Resources.Load("Menu/"+instrucciones[i]) as GameObject, TrayPosition + new Vector3(-0.1f, TrayPosition.y, 0.1f), Quaternion.identity);
                  
                 tray_items[randomIndex].Add(drink);
                 i += 1;
@@ -757,11 +853,18 @@ public class GameControllerWaiter : MonoBehaviour
                         i += 1;
                     }
                     else if(Array.IndexOf(ingredients, instrucciones[i]) >= 0){ //Si es un ingrediente
-                        //Instanciar y agregar el objeto ingrediente x (LettucePanel, CheesePanel, MeatPanel, KetchupPanel)
-                        GameObject ingredient = Instantiate(Resources.Load("Menu/"+instrucciones[i]) as GameObject, TrayPosition + new Vector3(0f, cont_hamburger, 0f), Quaternion.identity);
-                        cont_hamburger += ingredient.GetComponent<Renderer>().bounds.size.y;
-                        tray_items[randomIndex].Add(ingredient);
-                        i += 1;
+                        if(instrucciones[i] == "CheesePanel"){
+                            GameObject ingredient = Instantiate(Resources.Load("Menu/"+instrucciones[i]) as GameObject, TrayPosition + new Vector3(-0.1f, cont_hamburger + 0.17f, -0.15f), Quaternion.Euler(90f, 0f, 0f));
+                            cont_hamburger += ingredient.GetComponent<Renderer>().bounds.size.y;
+                            tray_items[randomIndex].Add(ingredient);
+                            i += 1;
+                        }else{
+                            //Instanciar y agregar el objeto ingrediente x (LettucePanel, CheesePanel, MeatPanel, KetchupPanel)
+                            GameObject ingredient = Instantiate(Resources.Load("Menu/"+instrucciones[i]) as GameObject, TrayPosition + new Vector3(0f, cont_hamburger, 0f), Quaternion.identity);
+                            cont_hamburger += ingredient.GetComponent<Renderer>().bounds.size.y;
+                            tray_items[randomIndex].Add(ingredient);
+                            i += 1;
+                        }
                     }
                     else if(instrucciones[i] == "ForTwoPanel"){ //panel for two
                         i += 1;
@@ -790,7 +893,7 @@ public class GameControllerWaiter : MonoBehaviour
                 }
             }
             else{ // futura implementacion de otros elementos
-                GameObject extra = Instantiate(Resources.Load("Menu/"+instrucciones[i]) as GameObject, TrayPosition + new Vector3(-0.3f, TrayPosition.y + 0.1f, 0.1f), Quaternion.identity);
+                GameObject extra = Instantiate(Resources.Load("Menu/"+instrucciones[i]) as GameObject, TrayPosition + new Vector3(0.1f, TrayPosition.y + 0.02f, -0.1f), Quaternion.identity);
                 tray_items[randomIndex].Add(extra);
                 i += 1;
             }
@@ -1164,5 +1267,131 @@ public class GameControllerWaiter : MonoBehaviour
         www.SetRequestHeader("Content-Type", "application/json");
 
         yield return www.SendWebRequest();
+    }
+
+
+    //RASA PART
+     //In fixedUpdate we check the timeout condition
+    void FixedUpdate(){
+        if (trigger & time == 4500){ // 4500 = 90sec timeout
+            // do something if timeout
+            CallPostRequest("timeout timeout");
+            time = 0;
+            
+        }else {
+            time = time + 1;
+        }
+    }
+     //CallPostRequest is responsible for helping the logic of the game and packaging the requests.
+    public void CallPostRequest(string txt)
+    {
+        time = 0;
+        MessageSenderRasa thisMSG = new MessageSenderRasa();
+        if (thisMSG!=null){
+            thisMSG.sender = "Rasaa";
+        }
+        if (txt == ""){
+            //thisMSG.message = "fairly"; //EJEMPLO CAMBIAR TEST
+            thisMSG.message = inputField.text;
+            //displayOutgoingText.text = inputField.text;
+            //saved = thisMSG.message.ToLower().Contains("stop");
+            if (thisMSG.message.ToLower().Contains("stop") || thisMSG.message.ToLower().Contains("take a break") || thisMSG.message.ToLower().Contains("pause")){
+                saved = true;
+            }else{
+                saved = false;
+            }
+            if (counter>=2 & saved==false){
+                tmp = tmp.Replace(tmp, names[counter]+thisMSG.message);
+                thisMSG.message = tmp;
+                counter+=1;
+            }
+            if (saved){
+                trigger = false;
+                restartGame();
+                controllerMenus.deactivateChatbot();
+                //timeoutTrigger = true;
+            }
+        }else{
+            thisMSG.message = txt;
+            //displayOutgoingText.text = txt;
+            paused = thisMSG.message.ToLower().Contains("timeout timeout");
+            if (paused){
+                trigger = false;
+                restartGame();
+                controllerMenus.deactivateChatbot();
+            }
+            if (thisMSG.message.ToLower().Contains("restore")){
+                restart = true;
+            }
+            
+        }
+        string json = JsonUtility.ToJson(thisMSG);
+        string address = "http://localhost:5005/webhooks/rest/webhook";
+        //string address = "https://rasa-server-parasolw.cloud.okteto.net/webhooks/rest/webhook";
+        //string address = "https://rasa-actions-server-sirkaza.cloud.okteto.net/webhook";
+
+        StartCoroutine(PostRequest(address, json));
+
+    }
+    //PostRequest handles REST calls
+    IEnumerator PostRequest(string uri, string json)
+    {
+        //var uwr = new UnityWebRequest(uri, "POST");
+	using (var uwr = new UnityWebRequest(uri, "POST")){
+        byte[] jsonTOSend = new System.Text.UTF8Encoding().GetBytes(json);
+        uwr.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonTOSend);
+        uwr.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+        uwr.SetRequestHeader("Content-Type", "application/json");
+        yield return uwr.SendWebRequest();
+        if (uwr.isNetworkError)
+        {
+            text = "Network error! Please check your internet connection.";
+        }
+        else
+        {
+            text = uwr.downloadHandler.text;
+            string ntext = "";
+            string prev = "}";
+            string now = ",";
+            int prevInd = 1;
+            int ind = 1;
+            string empty = "" +
+                "";
+            foreach (char s in text)
+            {
+                if (prev == s.ToString())
+                {
+                    string m = text.Substring(prevInd, ind - prevInd);
+                    //ntext = ntext + JsonConvert.DeserializeObject<Message>(m).text;
+                    ntext = ntext + JsonConvert.DeserializeObject<MessageRasa>(m).text+"\n";
+
+                    prevInd = ind + 1;
+                    
+                    ntext = ntext + empty;
+                    
+                }
+                ind = ind + 1;
+            }
+            int startInd = text.IndexOf("text") + 6;
+            int length = text.Length - 3 - startInd;
+            text = ntext;
+        }
+        displayIncomingText.text = text;
+        tts2.Play(displayIncomingText.text);
+        yield return new WaitForSeconds(5);
+        }
+    }
+    //this function is used if the first question was not answered
+    IEnumerator coroutineCall(int secs, string texts){
+        
+        restart = false;
+        yield return new WaitForSeconds(secs);
+        Debug.Log(texts.Length);
+        if(texts.Length < 3){
+            CallPostRequest("my day was horrible");
+        }else{
+            CallPostRequest(texts);
+        }
+        
     }
 }

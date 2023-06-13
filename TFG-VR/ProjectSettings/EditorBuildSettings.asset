@@ -14,10 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/WaiterScene.unity
     guid: 8ef857a1e69065947aa742d9fe1ba3d3
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Tutorial.unity
     guid: ad068360e87030443a87a5c22e8d562f
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/ChefScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects: {}

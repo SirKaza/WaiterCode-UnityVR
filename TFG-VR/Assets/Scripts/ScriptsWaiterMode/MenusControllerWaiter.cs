@@ -28,9 +28,13 @@ public class MenusControllerWaiter : MonoBehaviour
     private GameObject imageBig;
     private GameObject imageSmall;
     private Sprite myImg;
+    private string msg = "";
+    private GameObject chatbot;
+    // public TxtToSpeech ttsTV;
 
     private void Start()
     {
+        // ttsTV= GetComponent<TxtToSpeech>();
         savedText = GameObject.Find("SavingGameText");
         pauseMenu = GameObject.Find("PauseMenuWaiter");
         achievementsMenu = GameObject.Find("AchievementsWaiter");
@@ -44,6 +48,9 @@ public class MenusControllerWaiter : MonoBehaviour
         imageBig.SetActive(false);
         imageSmall = GameObject.Find("ImageBelowSmall"); ;
         imageSmall.SetActive(false);
+
+        chatbot = GameObject.Find("Chatbot");
+        chatbot.SetActive(false);
 
         // tutorialText = GameObject.Find("CanvasTextStart");
         // buttonText = GameObject.Find("ButtonText");
@@ -76,6 +83,22 @@ public class MenusControllerWaiter : MonoBehaviour
     // {
     //     deliverText.SetActive(active);
     // }
+
+    public void showChatbot()
+    {
+        // We want the menu to form right in front of the player and facing him
+        // First we adjust the chatbot position
+        var newPosition = new Vector3(player.transform.position.x, player.transform.position.y + 0.5f, player.transform.position.z);
+        this.chatbot.transform.position = newPosition + (player.transform.forward * 1.5f);
+        this.chatbot.transform.rotation = Quaternion.Euler(player.transform.rotation.eulerAngles.x, player.transform.rotation.eulerAngles.y, player.transform.rotation.eulerAngles.z);
+        this.chatbot.SetActive(true);
+    }
+    
+    public void deactivateChatbot()
+    {
+        this.chatbot.SetActive(false);
+    }
+
 
     public void showRanking()
     {
@@ -223,38 +246,50 @@ public class MenusControllerWaiter : MonoBehaviour
             textScreenWaiter.SetActive(true);
             isShowingComanda = false;
         }
-        textScreenWaiter.GetComponent<TextMeshProUGUI>().text = "Day ended!" + "\n" + "EXP :" + exp;
-
+        msg = "Day ended! EXP: " + exp.ToString();
+        textScreenWaiter.GetComponent<TextMeshProUGUI>().text = msg;
+        // ttsTV.Play(msg);
     }
 
     public void menuStartOfTheDay(int dia)
-    {
-        textScreenWaiter.GetComponent<TMPro.TextMeshProUGUI>().text = "Day: "+ dia.ToString()+" ended. Let's go with the next one! Go for another order!";
+    {   
+        msg = "Day: "+ dia.ToString()+" ended. Let's go with the next one! Go for another order!";
+        textScreenWaiter.GetComponent<TMPro.TextMeshProUGUI>().text = msg;
+        // ttsTV.Play(msg);
     }
     public void menuStartOfTheDayUnlockedLettuce(int dia)
     {
-        textScreenWaiter.GetComponent<TMPro.TextMeshProUGUI>().text = "Day: " + dia.ToString() + " ended. You have leveled up and you unlocked the ingredient: lettuce." + "Go for the next order!";
+        msg = "Day: " + dia.ToString() + " ended. You have leveled up and you unlocked the ingredient: lettuce." + "Go for the next order!";
+        textScreenWaiter.GetComponent<TMPro.TextMeshProUGUI>().text = msg;
+        // ttsTV.Play(msg);
 
     }
     public void menuStartOfTheDayUnlockedCondicionalsIf(int dia)
     {
-        textScreenWaiter.GetComponent<TMPro.TextMeshProUGUI>().text = "Day: " + dia.ToString() + " ended. You have leveled up and you unlocked unlock the basic conditional orders." + "Go for the next order!";
+        msg = "Day: " + dia.ToString() + " ended. You have leveled up and you unlocked unlock the basic conditional orders." + "Go for the next order!";
+        textScreenWaiter.GetComponent<TMPro.TextMeshProUGUI>().text = msg;
+        // ttsTV.Play(msg);
         
     }
     public void menuStartOfTheDayUnlockedCondicionalsIfElse(int dia)
     {
-        textScreenWaiter.GetComponent<TMPro.TextMeshProUGUI>().text = "Day: " + dia.ToString() + " ended. You have leveled up and you unlock the double conditional orders." + "Go for another order genius!";
+        msg = "Day: " + dia.ToString() + " ended. You have leveled up and you unlock the double conditional orders." + "Go for another order genius!";
+        textScreenWaiter.GetComponent<TMPro.TextMeshProUGUI>().text = msg;
+        // ttsTV.Play(msg);
     }
 
     public void menuIniciDeDiaUnlockedBucle(int dia)
     {
-        textScreenWaiter.GetComponent<TMPro.TextMeshProUGUI>().text = "Day: " + dia.ToString() + " ended. You have leveled up and you unlock the iterative orders" + "Let's go for the next order!";
+        msg = "Day: " + dia.ToString() + " ended. You have leveled up and you unlock the iterative orders" + "Let's go for the next order!";
+        textScreenWaiter.GetComponent<TMPro.TextMeshProUGUI>().text = msg;
+        // ttsTV.Play(msg);
     }
     public void mostrarFeedback(string feedback)
     {
         imageBig.SetActive(false);
         imageSmall.SetActive(false);
         textScreenWaiter.GetComponent<TextMeshProUGUI>().SetText(feedback);
+        // ttsTV.Play(feedback);
         isShowingComanda = false;
     }
 

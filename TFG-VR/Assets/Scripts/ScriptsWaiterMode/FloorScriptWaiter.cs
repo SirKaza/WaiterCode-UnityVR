@@ -15,7 +15,6 @@ public class FloorScriptWaiter : MonoBehaviour
                 Destroy(other.gameObject);
                 if (!other.GetComponent<panelScript>().getItWasInPanel())
                 {
-
                     GameControllerWaiter.current.createPanel(other.name);
                 }
             }

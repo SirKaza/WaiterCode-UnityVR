@@ -29,7 +29,7 @@ public class AttInstructions : MonoBehaviour
 
         if (other.tag == "panel" && !other.GetComponent<OVRGrabbable>().isGrabbed && !other.GetComponent<panelScript>().getIsInPanel())
         {
-            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Audio/panelSound"), other.transform.position, 0.7f);
+            AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Audio/panelSound"), other.transform.position, 0.5f);
             other.gameObject.tag = "Untagged"; //Quitamos el tag para quitarlo y poder instanciar correctamente cuando cae al suelo otro panel igual
             //Queremos la posicion encima del panel y debajo de la ultima instruccion que se ha añadido.
             //Si no hemos puesto ninguna instrucción, simplemente lo posicionamos arriba de todo del panel

@@ -10,7 +10,7 @@ public class OrderContWaiter:MonoBehaviour
     public OrderContWaiter()
     {
         ordersJson = GameObject.Find("ControllerPartidaWaiter").GetComponent<JSONReaderWaiter>();      
-   }
+    }
 
     public void generateOrder()
     {
