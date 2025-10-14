@@ -1,6 +1,6 @@
 # TFG - Waiter Code Unity VR
 
-**VR Videogame Final Degree Project**
+**Virtual Reality Serious Videogame Final Degree Project**
 
 ## 2.1. Main Objective
 
