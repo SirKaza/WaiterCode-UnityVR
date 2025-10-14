@@ -32,3 +32,5 @@ The main objective can be broken down into the following sub-objectives:
 ## For More Information
 
 If you want to learn more about the project, you can view the full **LaTeX report** [here](https://drive.google.com/file/d/1KwXn7qvnDboY9Q6ttFwg_ovlR-ulgbZc/view?usp=sharing).
+
+You can also watch a **demo video of the game** [here](https://youtu.be/NN-7dihITSo).
